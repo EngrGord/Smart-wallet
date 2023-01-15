@@ -2,11 +2,11 @@
 pragma solidity ^0.8.0;
 
 contract Wallet {
-    address public owner;
+    address payable public owner;
     mapping(address => uint) public balance;
 
-    constructor() public {
-        owner = msg.sender;
+    constructor() {
+        owner = payable(msg.sender);
     }
 
     function deposit() public payable {
@@ -17,7 +17,7 @@ contract Wallet {
     function withdraw(uint _amount) public {
         require(balance[msg.sender] >= _amount);
         require(msg.sender == owner);
-        msg.sender.transfer(_amount);
+        owner.transfer(_amount);
         balance[msg.sender] -= _amount;
     }
 
