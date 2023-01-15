@@ -1,51 +1,30 @@
 //SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0 <0.9.0;
+pragma solidity ^0.8.0;
 
-import "hardhat/console.sol";
+contract Wallet {
+    address public owner;
+    mapping(address => uint) public balance;
 
-contract YourContract {
-
-    // State Variables
-    address public immutable owner;
-    string public purpose = "Building Unstoppable Apps!!!";
-    bool public premium = false;
-    uint256 public totalCounter = 0;
-    mapping(address => uint) public userPurposeCounter;
-
-    // Events
-    event PurposeChange(address purposeSetter, string newPurpose, bool premium, uint256 value);
-
-    // Constructor: Called once on contract deployment
-    // Check packages/hardhat/deploy/00_deploy_your_contract.ts
-    constructor(address _owner) {
-        owner = _owner;
+    constructor() public {
+        owner = msg.sender;
     }
 
-    // Modifier: Can be applied to functions.
-    // Check the withdraw() function
-    modifier isOwner() {
-        require(msg.sender == owner, "Not the Owner");
-        _;
+    function deposit() public payable {
+        require(msg.value > 0);
+        balance[msg.sender] += msg.value;
     }
 
-    function setPurpose(string memory _newPurpose) public payable {
-        // Change state variables
-        purpose = _newPurpose;
-        totalCounter += 1;
-        userPurposeCounter[msg.sender] += 1;
-
-        if (msg.value > 0) {
-            premium = true;
-        } else {
-            premium = false;
-        }
-
-        emit PurposeChange(msg.sender, _newPurpose, msg.value > 0, 0);
+    function withdraw(uint _amount) public {
+        require(balance[msg.sender] >= _amount);
+        require(msg.sender == owner);
+        msg.sender.transfer(_amount);
+        balance[msg.sender] -= _amount;
     }
 
-     function withdraw() isOwner public {
-        (bool success,) = owner.call{value: address(this).balance}("");
-        require(success, "Failed to send Ether");
+    function transfer(address _to, uint _amount) public {
+        require(balance[msg.sender] >= _amount);
+        balance[msg.sender] -= _amount;
+        balance[_to] += _amount;
     }
 
     // Allow directly receiving ETH by default.
