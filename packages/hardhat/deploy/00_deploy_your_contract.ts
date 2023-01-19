@@ -5,7 +5,7 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   const { deployer } = await hre.getNamedAccounts();
   const { deploy } = hre.deployments;
 
-  await deploy("YourContract", {
+  await deploy("SafeWallet", {
     from: deployer,
     // Constructor args.
     // Use your frontend address
@@ -16,11 +16,11 @@ const deployYourContract: DeployFunction = async function (hre: HardhatRuntimeEn
   });
 
   // Get the deployed contract.
-  // const yourContract = await hre.ethers.getContract("YourContract", deployer);
+  // const safeWallet = await hre.ethers.getContract("SafeWallet", deployer);
 };
 
 export default deployYourContract;
 
 // Tags are useful if you have multiple deploy files and only want to run one of them
 // e.g. yarn deploy --tags YourContract
-deployYourContract.tags = ["YourContract"];
+deployYourContract.tags = ["SafeWallet"];
