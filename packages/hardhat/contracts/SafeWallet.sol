@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-contract SafetWallet {
+contract SafeWallet {
     // The address of the wallet owner
     address payable public owner;
     // Mapping of authorized signers
